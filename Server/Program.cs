@@ -1,8 +1,13 @@
+using Server.MsSQL.DataProviders;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+builder.Services.AddSingleton<TodoSqlDataProvider>();
+builder.Services.AddSingleton<CategorySqlDataProvider>();
 
 var app = builder.Build();
 
