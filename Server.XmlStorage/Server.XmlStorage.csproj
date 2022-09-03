@@ -12,4 +12,8 @@
     <PackageReference Include="GraphQL.Server.All" Version="7.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Server.Business\Server.Business.csproj" />
+  </ItemGroup>
+
 </Project>

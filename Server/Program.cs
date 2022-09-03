@@ -1,4 +1,5 @@
 using Server.MsSQL.DataProviders;
+using Server.XmlStorage.DataProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddSingleton<TodoSqlDataProvider>();
 builder.Services.AddSingleton<CategorySqlDataProvider>();
+builder.Services.AddSingleton<TodoXmlDataProvider>();
+builder.Services.AddSingleton<CategoryXmlDataProvider>();
 
 var app = builder.Build();
 

@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Server.MsSQL\Server.MsSQL.csproj" />
+    <ProjectReference Include="..\Server.XmlStorage\Server.XmlStorage.csproj" />
   </ItemGroup>
 
 </Project>
