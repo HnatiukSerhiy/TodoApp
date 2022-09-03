@@ -1,42 +1,42 @@
 ﻿using System.Data.SqlClient;
+using AutoMapper;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Server.Business.Entities;
 using Server.Business.Interfaces;
+using Server.MsSQL.Mapper;
+using Server.MsSQL.Models;
 
 namespace Server.MsSQL.DataProviders;
 
 public class TodoSqlDataProvider : ITodoDataProvider
     {
         private readonly string connectionString;
+        private readonly IMapper mapper;
 
         public TodoSqlDataProvider(IConfiguration configuration)
         {
             connectionString = configuration.GetConnectionString("DefaultConnection");
+            mapper = new MapperSetup().Mapper;
         }
 
         public int Add(TodoModel todoModel)
         {
-            const string query = $@"
+            const string query = @"
                     INSERT INTO Todos
                         (Description, Deadline, CategoryId)
                     OUTPUT INSERTED.Id
                         VALUES(@Description, @Deadline, @categoryId)";
 
-            var parameters = new
-            {
-                Description = todoModel.Description,
-                Deadline = todoModel.Deadline,
-                CategoryId = todoModel.Category.Id,
-            };
+            var todoDbModel = mapper.Map<TodoDbModel>(todoModel);
 
             using var connection = new SqlConnection(connectionString);
-            return connection.ExecuteScalar<int>(query, parameters);
+            return connection.ExecuteScalar<int>(query, todoDbModel);
         }
 
         public int Delete(int id)
         {
-            const string query = $"DELETE FROM Todos WHERE Id=@Id OUTPUT DELETED.Id";
+            const string query = "DELETE FROM Todos WHERE Id=@Id OUTPUT DELETED.Id";
 
             var connection = new SqlConnection(connectionString);
             return connection.ExecuteScalar<int>(query, new { Id = id });
@@ -44,7 +44,7 @@ public class TodoSqlDataProvider : ITodoDataProvider
 
         public TodoModel GetById(int id)
         {
-            const string query = @$"
+            const string query = @"
                         SELECT * FROM Todos
                         LEFT JOIN Categories ON (Todos.CategoryId=Categories.Id)
                         WHERE Todos.Id=@Id";
@@ -98,7 +98,7 @@ public class TodoSqlDataProvider : ITodoDataProvider
 
         public int Solve(int id)
         {
-            const string query = @$"
+            const string query = @"
                         UPDATE Todos 
                         SET 
                             IsCompleted=@IsCompleted, 
@@ -120,7 +120,7 @@ public class TodoSqlDataProvider : ITodoDataProvider
 
         public int Update(TodoModel todoModel)
         {
-            string query = @$"
+            string query = @"
                     UPDATE Todos 
                     SET 
                         Description=@Description, 
@@ -129,15 +129,9 @@ public class TodoSqlDataProvider : ITodoDataProvider
                     WHERE Todos.Id = @Id
                     OUTPUT INSERTED.Id";
 
-            var parameters = new
-            {
-                Id = todoModel.Id,
-                Description = todoModel.Description,
-                Deadline = todoModel.Deadline,
-                CategoryId = todoModel.Category.Id
-            };
-
+            var todoDbModel = mapper.Map<TodoDbModel>(todoModel);
+            
             var connection = new SqlConnection(connectionString);
-            return connection.ExecuteScalar<int>(query, parameters);
+            return connection.ExecuteScalar<int>(query, todoDbModel);
         }
     }

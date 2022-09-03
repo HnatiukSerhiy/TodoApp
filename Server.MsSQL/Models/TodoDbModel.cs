@@ -1,11 +1,11 @@
-﻿namespace Server.Business.Entities;
+﻿namespace Server.MsSQL.Models;
 
-public class TodoModel
+public class TodoDbModel
 {
     public int Id { get; set; }
     public string Description { get; set; } = string.Empty;
     public DateTime? Deadline { get; set; }
     public DateTime? DoneTime { get; set; }
-    public CategoryModel? Category { set; get; } = new();
+    public int CategoryId { set; get; }
     public bool? IsCompleted { set; get; }
 }

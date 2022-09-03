@@ -17,7 +17,7 @@ public class CategorySqlDataProvider : ICategoryDataProvider
 
     public int Add(CategoryModel categoryModel)
     {
-        const string query = $@"INSERT INTO Categories(Name) OUTPUT INSERTED.Id values(@Name)";
+        const string query = @"INSERT INTO Categories(Name) OUTPUT INSERTED.Id values(@Name)";
 
         using var connection = new SqlConnection(connectionString);
         return connection.ExecuteScalar<int>(query, categoryModel);
@@ -25,7 +25,7 @@ public class CategorySqlDataProvider : ICategoryDataProvider
 
     public int Delete(int id)
     {
-        const string query = @$"DELETE FROM Categories WHERE Id=@Id OUTPUT DELETED.Id";
+        const string query = @"DELETE FROM Categories WHERE Id=@Id OUTPUT DELETED.Id";
 
         using var connection = new SqlConnection(connectionString);
         return connection.ExecuteScalar<int>(query, new { Id = id });
@@ -33,7 +33,7 @@ public class CategorySqlDataProvider : ICategoryDataProvider
 
     public CategoryModel GetById(int id)
     {
-        const string query = @$"SELECT * FROM Categories WHERE Categpries.Id=@Id";
+        const string query = @"SELECT * FROM Categories WHERE Categpries.Id=@Id";
 
         using var connection = new SqlConnection(connectionString);
         return connection.Query<CategoryModel>(query, new { Id = id }).LastOrDefault()!;
@@ -49,7 +49,7 @@ public class CategorySqlDataProvider : ICategoryDataProvider
 
     public int Update(CategoryModel categoryModel)
     {
-        const string query = @$"
+        const string query = @"
                         UPDATE Categories 
                             SET Name=@Name
                         WHERE Categories.Id=@Id

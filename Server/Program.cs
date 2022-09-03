@@ -1,16 +1,26 @@
+using GraphQL;
+using Server.Api;
+using Server.Interfaces;
+using Server.Mapper;
 using Server.MsSQL.DataProviders;
+using Server.Utilities;
 using Server.XmlStorage.DataProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddControllers();
+builder.Services.AddAutoMapper(typeof(TodoProfile), typeof(CategoryProfile));
 
 builder.Services.AddSingleton<TodoSqlDataProvider>();
 builder.Services.AddSingleton<CategorySqlDataProvider>();
 builder.Services.AddSingleton<TodoXmlDataProvider>();
 builder.Services.AddSingleton<CategoryXmlDataProvider>();
+
+builder.Services.AddSingleton<IDataProviderResolver, DataProviderResolver>();
+
+builder.Services.AddGraphQL(b => b
+    .AddAutoSchema<RootQuery>(config => config.WithMutation<RootMutation>())
+    .AddSystemTextJson()
+    .AddErrorInfoProvider(e => e.ExposeExceptionDetails = true));
 
 var app = builder.Build();
 
@@ -23,11 +33,11 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-/*app.UseEndpoints(endpoints =>
+app.UseEndpoints(endpoints =>
 {
     endpoints.MapGraphQL("/graphql");
 });
-app.UseGraphQLAltair();*/
+app.UseGraphQLAltair("/altair");
 
 app.UseSpa(spa =>
 {
