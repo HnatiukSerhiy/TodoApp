@@ -28,16 +28,7 @@ namespace Server.TodoTests
             var content = _httpService.GetRequestContent(query);
             var response = await _httpService.GetResponse<ParentJsonModel<HelloJsonModel>>(content);
 
-            if (response.ResponseMessage.StatusCode != HttpStatusCode.OK)
-            {
-                var errorResponse = await _httpService.GetResponse<ParentErrorJsonModel>(content);
-
-                foreach (var error in errorResponse.Json.Errors)
-                {
-                    _outputHelper.WriteLine(error.Message);
-                    _outputHelper.WriteLine(error.Extensions.Details);
-                }
-            }
+            LogError(response);
 
             Assert.Equal(expected, response.Json.Data.Hello);
         }
@@ -63,6 +54,18 @@ namespace Server.TodoTests
                 }";
 
             Assert.Equal(1, 1);
+        }
+
+        private void LogError<T>(ResponseModel<T> response) where T : class
+        {
+            if (response.ResponseMessage.StatusCode != HttpStatusCode.OK)
+            {
+                foreach (var error in response.ErrorJson.Errors)
+                {
+                    _outputHelper.WriteLine(error.Message);
+                    _outputHelper.WriteLine(error.Extensions.Details);
+                }
+            }
         }
     }
 }

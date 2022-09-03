@@ -31,15 +31,17 @@ public class HttpService
         var response = await _client.PostAsync(URL, content);
         var json = await response.Content.ReadAsStringAsync();
 
+        ParentErrorJsonModel errors = new ParentErrorJsonModel();
         if (response.StatusCode != HttpStatusCode.OK)
         {
-            
+            errors = JsonConvert.DeserializeObject<ParentErrorJsonModel>(json);
         }
         
         return new ResponseModel<T>
         {
             ResponseMessage = response,
-            Json = JsonConvert.DeserializeObject<T>(json)
+            Json = JsonConvert.DeserializeObject<T>(json),
+            ErrorJson = errors
         };
     }
 }
