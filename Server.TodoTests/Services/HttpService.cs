@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net;
+using System.Text;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Newtonsoft.Json;
@@ -19,13 +20,9 @@ public class HttpService
 
     public StringContent GetRequestContent(string query, object? variables = null)
     {
-        var payloadToParse = new
-        {
-            query = query,
-            variables = variables
-        };
+        var payloadToParse = new { query, variables };
 
-        var payload = JsonConvert.SerializeObject(payloadToParse);
+        string payload = JsonConvert.SerializeObject(payloadToParse);
         return new StringContent(payload, Encoding.UTF8, "application/json");
     }
 
@@ -34,6 +31,11 @@ public class HttpService
         var response = await _client.PostAsync(URL, content);
         var json = await response.Content.ReadAsStringAsync();
 
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            
+        }
+        
         return new ResponseModel<T>
         {
             ResponseMessage = response,
