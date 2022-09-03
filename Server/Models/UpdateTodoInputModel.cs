@@ -7,5 +7,5 @@ public class UpdateTodoInputModel
     public int Id { set; get; }
     public string Description { get; set; } = string.Empty;
     public DateTime? Deadline { get; set; }
-    public CategoryModel Category { set; get; } = new();
+    public int CategoryId { set; get; }
 }

@@ -12,7 +12,7 @@ public class TodoProfile : Profile
             .ForMember(dest => dest.CategoryId, 
                 opt => 
                     opt.MapFrom(source => 
-                        source.Category == null ? (int?)null : source.Category.Id));
+                        source.Category == null ? (int?)null : source.Category.Id)).ReverseMap();
     }
     
 }
