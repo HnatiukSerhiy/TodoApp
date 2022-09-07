@@ -1,11 +1,14 @@
 import React from 'react';
+import MainLayout from "./components/MainLayout";
+import 'antd/dist/antd.css';
+import {BrowserRouter} from "react-router-dom";
 
-function App() {
-  return (
-    <div className="App">
-      Hello world!
-    </div>
-  );
+const App = (): JSX.Element => {
+    return (
+        <BrowserRouter>
+            <MainLayout />
+        </BrowserRouter>
+    )
 }
 
 export default App;
