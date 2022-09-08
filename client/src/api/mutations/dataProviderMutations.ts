@@ -1,6 +1,6 @@
 import {getGraphQLRequestParams} from "../common/getGraphQLRequestParams";
 
-export const changeDataProvider = (payload: string, feature: string) => {
+export const changeDataProviderMutation = (payload: string, feature: string) => {
     const query: string = ``;
 
     const variables = {

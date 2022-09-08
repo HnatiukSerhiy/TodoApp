@@ -1,5 +1,5 @@
 import {Routes, Route} from 'react-router-dom';
-import {Path} from "../utils/path";
+import {Path} from "../enums/path";
 import TodoPage from "../pages/TodoPage";
 import CategoryPage from "../pages/CategoryPage";
 

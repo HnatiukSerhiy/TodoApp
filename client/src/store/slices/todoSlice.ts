@@ -1,9 +1,21 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {TodoType} from "../../types/todoTypes";
+import {SolveTodoType, TodoType} from "../../types/todoTypes";
 
 type InitialStateType = TodoType[];
 
-const initialState: InitialStateType = [];
+const initialState: InitialStateType = [
+    {
+        id: 1,
+        description: "demo todo",
+        deadline: "2022-02-02",
+        doneTime: undefined,
+        category: {
+            id: 1,
+            name: "Home"
+        },
+        isCompleted: false
+    }
+];
 
 const todoSlice = createSlice({
     name: 'todos',
@@ -11,6 +23,11 @@ const todoSlice = createSlice({
     reducers: {
         pushTodos: (state, action: PayloadAction<TodoType[]>) => [...state, ...action.payload],
         addTodo: (state, action: PayloadAction<TodoType>) => [...state, action.payload],
+        solveTodo: (state, action: PayloadAction<SolveTodoType>) => {
+            const index = state.findIndex(todo => todo.id === action.payload.id);
+            state[index].isCompleted = true;
+            state[index].doneTime = action.payload.doneTime;
+        },
         updateTodo: (state, action: PayloadAction<TodoType>) => {
             const index = state.findIndex(todo => todo.id === action.payload.id);
             state[index] = action.payload;
@@ -24,6 +41,7 @@ export const {
     pushTodos,
     addTodo,
     updateTodo,
+    solveTodo,
     deleteTodo
 } = todoSlice.actions;
 export default todoSlice;

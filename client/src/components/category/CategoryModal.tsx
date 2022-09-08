@@ -1,15 +1,15 @@
 import {Modal} from "antd";
-import TodoForm, {TodoFormPayload} from "./TodoForm";
+import CategoryForm, {CategoryFormPayload} from "./CategoryForm";
 
 type Props = {
     visible: boolean
     title: string
     onCancelModal: () => void
     onFormFinish: (values: any) => void
-    formPayload: TodoFormPayload
+    formPayload: CategoryFormPayload
 }
 
-const TodoModal = ({visible, onCancelModal, title, onFormFinish, formPayload}: Props): JSX.Element => {
+const CategoryModal = ({visible, onCancelModal, title, onFormFinish, formPayload}: Props): JSX.Element => {
 
     return (
         <Modal
@@ -18,7 +18,7 @@ const TodoModal = ({visible, onCancelModal, title, onFormFinish, formPayload}: P
             onCancel={onCancelModal}
             footer={null}
         >
-            <TodoForm
+            <CategoryForm
                 onFinish={onFormFinish}
                 formPayload={formPayload}
             />
@@ -26,4 +26,4 @@ const TodoModal = ({visible, onCancelModal, title, onFormFinish, formPayload}: P
     )
 }
 
-export default TodoModal;
+export default CategoryModal;

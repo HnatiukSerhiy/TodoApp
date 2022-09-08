@@ -1,29 +1,41 @@
-import {Button, Col, Modal, Row, Select, Tooltip} from "antd";
-import CompletedTodos from "../components/todo/CompletedTodos";
-import UnCompletedTodos from "../components/todo/UnCompletedTodos";
-import {useState} from "react";
+import {Button, Col, Form, Row} from "antd";
+import {useEffect, useState} from "react";
 import TodoModal from "../components/todo/TodoModal";
+import CategorySelectorFormItem from "../components/category/CategorySelectorFormItem";
+import {useActions, useAppSelector} from "../hooks";
+import {selectCompletedTodos, selectUnCompletedTodos} from "../store/selectors/todoSelectors";
+import UnCompletedTodos from "../components/todo/UnCompletedTodos";
+import CompletedTodos from "../components/todo/CompletedTodos";
+import {AddTodoFormType} from "../types/todoTypes";
+import {getAddTodoPayloadFromFormInput} from "../utils/converters";
+import {selectDataProvider} from "../store/selectors/dataProviderSelectors";
 
 const TodoPage = (): JSX.Element => {
     const [isModalVisible, setModalVisible] = useState<boolean>(false);
+    const [categoryFilterValue, setCategoryFilterValue] = useState<string | undefined>(undefined);
 
-    const onOkModal = () => {
+    const { getCompletedTodosApiAction, getUnCompletedTodosApiAction, addTodoApiAction } = useActions();
+
+    const onCancelModal = () => setModalVisible(false);
+    const onFilterChange = (value: any) => setCategoryFilterValue(value);
+
+    const onAddTodoFinish = (todo: AddTodoFormType) => {
+        addTodoApiAction(getAddTodoPayloadFromFormInput(todo));
         setModalVisible(false);
     }
 
-    const onCancelModal = () => {
-        setModalVisible(false);
-    }
+    const dataProvider = useAppSelector(selectDataProvider);
 
-    const addTodoPayload = {
-        description: undefined,
-        deadline: undefined,
-        categoryId: undefined
-    }
+    useEffect(() => {
+        /*const categoryId = categoryFilterValue !== DefaultSelectorEnum.defaultCategorySelectorValue ?
+            Number(categoryFilterValue) : undefined;
 
-    const onAddTodoFinish = (values: any) => {
-        console.log(values);
-    }
+        getCompletedTodosApiAction(categoryId);
+        getUnCompletedTodosApiAction(categoryId);*/
+    }, [categoryFilterValue, dataProvider]);
+
+    const completedTodos = useAppSelector(selectCompletedTodos);
+    const unCompletedTodos = useAppSelector(selectUnCompletedTodos);
 
     return (
         <>
@@ -39,32 +51,31 @@ const TodoPage = (): JSX.Element => {
             </Row>
             <Row style={{marginBottom: 30}}>
                 <Col>
-                    <Tooltip title="Filter todos by category">
-                        <Select defaultValue={'1'} style={{ width: 120 }}>
-                            <Select.Option value={'1'}>Home</Select.Option>
-                            <Select.Option value={'2'}>Education</Select.Option>
-                            <Select.Option value={'3'}>Work</Select.Option>
-                        </Select>
-                    </Tooltip>
+                    <Form>
+                        <CategorySelectorFormItem
+                            onChange={onFilterChange}
+                            defaultValue={0}
+                            label={''}
+                        />
+                    </Form>
                 </Col>
             </Row>
             <Row style={{marginBottom: 30}}>
                 <Col span={24}>
-                    <CompletedTodos />
+                    <UnCompletedTodos data={unCompletedTodos} />
                 </Col>
             </Row>
             <Row>
                 <Col span={24}>
-                    <UnCompletedTodos />
+                    <CompletedTodos data={completedTodos} />
                 </Col>
             </Row>
             <TodoModal
                 title={'Add todo'}
                 visible={isModalVisible}
-                onOkModal={onOkModal}
                 onCancelModal={onCancelModal}
-                formPayload={addTodoPayload}
                 onFormFinish={onAddTodoFinish}
+                formPayload={{}}
             />
         </>
     )

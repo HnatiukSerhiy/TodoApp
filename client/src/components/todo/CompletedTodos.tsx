@@ -1,25 +1,29 @@
-import {Table} from "antd";
+import {Button, Table} from "antd";
 import { Typography } from 'antd';
 import {ColumnsType} from "antd/es/table";
+import {useActions} from "../../hooks";
+import {TodoType} from "../../types/todoTypes";
+import {CompletedTodosDisplayData, getCompletedTodosDisplayData} from "../../utils/getDisplayData";
 
-type DataType = {
-    key: number
-    description: string
-    deadline: string
-    category: string
+type Props = {
+    data: TodoType[]
 }
 
-const CompletedTodos = (): JSX.Element => {
-    const columns: ColumnsType<DataType> = [
+const CompletedTodos = ({data}: Props): JSX.Element => {
+    const { deleteTodoApiAction } = useActions();
+
+    const onDeleteClick = (id: number) => deleteTodoApiAction(id);
+
+    const columns: ColumnsType<CompletedTodosDisplayData> = [
         {
             title: 'Description',
             dataIndex: 'description',
             key: 'description'
         },
         {
-            title: 'Deadline',
-            dataIndex: 'deadline',
-            key: 'deadline'
+            title: 'DoneTime',
+            dataIndex: 'doneTime',
+            key: 'doneTime'
         },
         {
             title: 'category',
@@ -33,20 +37,21 @@ const CompletedTodos = (): JSX.Element => {
             render: (_, record) => {
                 return (
                     <>
-                        Solve
-                        Update
-                        Delete
+                        <div>
+                            <Button type={'text'} onClick={() => onDeleteClick(record.key)}>Delete</Button>
+                        </div>
                     </>
                 )
             }
         },
     ]
 
+    const displayData = getCompletedTodosDisplayData(data)
 
     return (
         <>
-            <Typography.Title level={4}>Completed Todos</Typography.Title>
-            <Table columns={columns} />
+            <Typography.Title level={4}>UnCompleted Todos</Typography.Title>
+            <Table columns={columns} dataSource={displayData} pagination={false} />
         </>
     )
 }

@@ -1,12 +1,16 @@
-import {Layout, Menu, Space} from 'antd';
+import {Layout, Menu, Select, Space, Tooltip} from 'antd';
 import React from 'react';
 import {ItemType} from "antd/es/menu/hooks/useItems";
 import {Link, useLocation} from "react-router-dom";
-import {Path} from "../utils/path";
+import {Path} from "../enums/path";
 import './Layout.css';
 import AppRouter from "./AppRouter";
+import {DataProviderEnum} from "../enums/utilsEnum";
+import {useActions, useAppSelector} from "../hooks";
+import {selectDataProvider} from "../store/selectors/dataProviderSelectors";
+import {changeDataProviderApiAction} from "../store/actions/dataProviderApiActions";
 
-export const items: ItemType[] = [
+const items: ItemType[] = [
     {
         key: Path.Todos,
         label: (
@@ -35,11 +39,16 @@ export const items: ItemType[] = [
 
 export const MainLayout = (): JSX.Element => {
     const { Header, Content } = Layout;
+    const { Option } = Select;
+    const {changeDataProviderApiAction} = useActions();
     const location = useLocation();
+
+    const currentDataProvider = useAppSelector(selectDataProvider);
+    const handleDataProviderSelect = (value: DataProviderEnum) => changeDataProviderApiAction(value);
 
     return (
         <Layout className="layout">
-            <Header>
+            <Header style={{position: 'relative'}}>
                 <Menu
                     theme="dark"
                     mode="horizontal"
@@ -49,6 +58,12 @@ export const MainLayout = (): JSX.Element => {
                     }
                     items={items}
                 />
+                <div style={{position: "absolute", top: 0 , right: 50}}>
+                    <Select defaultValue={currentDataProvider} onChange={handleDataProviderSelect} >
+                        <Option value={DataProviderEnum.SQLServer}>SQL Server</Option>
+                        <Option value={DataProviderEnum.XMLStorage}>XML Storage</Option>
+                    </Select>
+                </div>
             </Header>
             <Content>
                 <div className="site-layout-content">

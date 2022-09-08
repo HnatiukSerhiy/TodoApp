@@ -3,7 +3,16 @@ import {CategoryType} from "../../types/categoryTypes";
 
 type InitialStateType = CategoryType[];
 
-const initialState: InitialStateType = [];
+const initialState: InitialStateType = [
+    {
+        id: 1,
+        name: 'Home'
+    },
+    {
+        id: 2,
+        name: 'Education'
+    }
+];
 
 const categorySlice = createSlice({
     name: 'categories',

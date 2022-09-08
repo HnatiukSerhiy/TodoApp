@@ -21,6 +21,16 @@ export const updateTodoMutation = (payload: UpdateTodoType, feature: string) => 
     return getGraphQLRequestParams(query, feature, variables);
 }
 
+export const solveTodoMutation = (payload: number, feature: string) => {
+    const query: string = ``;
+
+    const variables = {
+        id: payload
+    }
+
+    return getGraphQLRequestParams(query, feature, variables);
+}
+
 export const deleteTodoMutation = (payload: number, feature: string) => {
     const query: string = ``;
 
