@@ -59,7 +59,7 @@ export const MainLayout = (): JSX.Element => {
                     items={items}
                 />
                 <div style={{position: "absolute", top: 0 , right: 50}}>
-                    <Select defaultValue={currentDataProvider} onChange={handleDataProviderSelect} >
+                    <Select disabled={true} defaultValue={currentDataProvider} onChange={handleDataProviderSelect} >
                         <Option value={DataProviderEnum.SQLServer}>SQL Server</Option>
                         <Option value={DataProviderEnum.XMLStorage}>XML Storage</Option>
                     </Select>
