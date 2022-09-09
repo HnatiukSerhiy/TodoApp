@@ -46,7 +46,7 @@ const UnCompletedTodos = ({data}: Props): JSX.Element => {
 
     const onUpdateClick = (record: UnCompletedTodosDisplayData) => {
         const categoriesWithSameName = categories.filter(category => category.name === record.category);
-        console.log(categoriesWithSameName);
+
         form.setFieldsValue({
             id: record.key,
             description: record.description,
