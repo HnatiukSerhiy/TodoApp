@@ -8,7 +8,7 @@ const getCategoriesSuccessEpics = (action$: any) => {
     return action$.pipe(
         ofType(`${CategoryActionEnum.get}${ApiActionEnum.apiSuccess}`),
         mergeMap((action: any) => {
-            return of(pushCategories(action.payload.data.category.getAll as CategoryType[]))
+            return of(pushCategories(action.payload.data.category.getCategories as CategoryType[]))
         })
     )
 }

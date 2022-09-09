@@ -8,7 +8,7 @@ const changeDataProviderSuccessEpic = (action$: any) => {
     return action$.pipe(
         ofType(`${DataProviderActionEnum.change}${ApiActionEnum.apiSuccess}`),
         mergeMap((action: any) => {
-            return of(setDataProvider(action.payload.data.dataProvider.change as DataProviderEnum))
+            return of(setDataProvider(action.payload.data.dataProvider.changeDataProvider as DataProviderEnum))
         })
     )
 }
