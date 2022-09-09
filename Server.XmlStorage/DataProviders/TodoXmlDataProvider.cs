@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System.Diagnostics;
+using System.Xml;
 using Microsoft.Extensions.Configuration;
 using Server.Business.Entities;
 using Server.Business.Interfaces;
@@ -15,7 +16,8 @@ public class TodoXmlDataProvider : ITodoDataProvider
 
         public TodoXmlDataProvider(IConfiguration configuration)
         {
-            todosXmlPath = configuration["XmlPath:Todos"];
+            var projectFolder = Directory.GetParent(Directory.GetCurrentDirectory())!.FullName;
+            todosXmlPath = Path.Combine(projectFolder, configuration["XmlPath:Todos"]);
             todoBuilder = new TodoBuilder();
             xmlDocument = new XmlDocument();
             categoryXmlDataProvider = new CategoryXmlDataProvider(configuration);

@@ -14,7 +14,8 @@ public class CategoryXmlDataProvider : ICategoryDataProvider
 
         public CategoryXmlDataProvider(IConfiguration configuration)
         {
-            categoriesXmlPath = configuration["XmlPath:Categories"];
+            var projectFolder = Directory.GetParent(Directory.GetCurrentDirectory())!.FullName;
+            categoriesXmlPath = Path.Combine(projectFolder, configuration["XmlPath:Categories"]);
             categoryBuilder = new CategoryBuilder();
             xmlDocument = new XmlDocument();
         }
