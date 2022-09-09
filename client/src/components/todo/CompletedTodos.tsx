@@ -1,4 +1,4 @@
-import {Button, Table} from "antd";
+import {Button, Modal, Table} from "antd";
 import { Typography } from 'antd';
 import {ColumnsType} from "antd/es/table";
 import {useActions} from "../../hooks";
@@ -11,8 +11,21 @@ type Props = {
 
 const CompletedTodos = ({data}: Props): JSX.Element => {
     const { deleteTodoApiAction } = useActions();
+    const { confirm } = Modal;
 
-    const onDeleteClick = (id: number) => deleteTodoApiAction(id);
+    const openConfirmModal = (id: number) => {
+        confirm({
+            title: 'Warning',
+            content: 'Are you sure you want to delete this todo item?',
+            centered: true,
+            onOk() {
+                deleteTodoApiAction(id);
+            },
+            onCancel() {}
+        })
+    }
+
+    const onDeleteClick = (id: number) => openConfirmModal(id);
 
     const columns: ColumnsType<CompletedTodosDisplayData> = [
         {

@@ -1,4 +1,4 @@
-import {Button, Col, Modal, Row, Table} from "antd";
+import {Button, Col, Form, FormInstance, Modal, Row, Table} from "antd";
 import { Typography } from 'antd';
 import {ColumnsType} from "antd/es/table";
 import {useState} from "react";
@@ -8,6 +8,7 @@ import {useActions, useAppSelector} from "../../hooks";
 import TodoModal from "./TodoModal";
 import {selectCategories} from "../../store/selectors/categorySelectors";
 import {getAddTodoPayloadFromFormInput, getUpdateTodoPayloadFromFormInput} from "../../utils/converters";
+import moment from "moment";
 
 type Props = {
     data: TodoType[]
@@ -22,9 +23,9 @@ type EditTodoPayload = {
 
 const UnCompletedTodos = ({data}: Props): JSX.Element => {
     const [isEditModalVisible, setEditModalVisible] = useState<boolean>(false);
-    const [editTodoModalPayload, setEditTodoModalPayload] = useState<EditTodoPayload>({});
 
-    const {confirm} = Modal;
+    const { confirm } = Modal;
+    const [form] = Form.useForm();
 
     const { deleteTodoApiAction, solveTodoApiAction, updateTodoApiAction } = useActions();
 
@@ -34,7 +35,7 @@ const UnCompletedTodos = ({data}: Props): JSX.Element => {
             content: 'Are you sure you want to delete this todo item?',
             centered: true,
             onOk() {
-                // deleteTodoApiAction(id);
+                deleteTodoApiAction(id);
             },
             onCancel() {}
         })
@@ -45,26 +46,25 @@ const UnCompletedTodos = ({data}: Props): JSX.Element => {
     const onUpdateClick = (record: UnCompletedTodosDisplayData) => {
         const categoriesWithSameName = categories.filter(category => category.name === record.category);
 
-        setEditTodoModalPayload({
+        form.setFieldsValue({
             id: record.key,
             description: record.description,
-            deadline: record.deadline,
+            deadline: moment(`${record.deadline}`, 'YYYY-MM-DD'),
             categoryId: categoriesWithSameName[0].id
-        } as EditTodoPayload);
+        })
+
+        moment(`${record.deadline}`, 'YYYY-MM-DD')
+
         setEditModalVisible(true);
     }
 
     const onSolveClick = (id: number) => solveTodoApiAction(id);
     const onDeleteClick = (id: number) => openConfirmModal(id);
 
-    const onCancelEditModal = () => {
-        setEditModalVisible(false);
-        setEditTodoModalPayload({});
-    }
+    const onCancelEditModal = () => setEditModalVisible(false);
 
     const onSubmitEditModal = (todo: UpdateTodoFormType) => {
         updateTodoApiAction(getUpdateTodoPayloadFromFormInput(todo));
-        setEditTodoModalPayload({});
         setEditModalVisible(false);
     }
 
@@ -117,7 +117,7 @@ const UnCompletedTodos = ({data}: Props): JSX.Element => {
                 title={'Update todo'}
                 onCancelModal={onCancelEditModal}
                 onFormFinish={onSubmitEditModal}
-                formPayload={editTodoModalPayload}
+                form={form}
             />
         </>
     )

@@ -5,12 +5,12 @@ import {CategoryType} from "../../types/categoryTypes";
 import {DefaultSelectorEnum} from "../../enums/utilsEnum";
 
 type Props = {
-    defaultValue: number
+    defaultValue?: number
     onChange?: (values: any) => void
     label: string
 }
 
-const CategorySelectorFormItem = ({defaultValue, onChange, label}: Props): JSX.Element => {
+const CategorySelectorFormItem = ({defaultValue = 0, onChange, label}: Props): JSX.Element => {
     const { Option } = Select;
 
     const categories: CategoryType[] = useAppSelector(selectCategories);

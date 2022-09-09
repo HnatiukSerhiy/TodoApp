@@ -1,4 +1,4 @@
-import {Button, Col, DatePicker, Form, Input, Row} from "antd";
+import {Button, Col, DatePicker, Form, FormInstance, Input, Row} from "antd";
 import {DefaultSelectorEnum} from "../../enums/utilsEnum";
 import moment from "moment";
 import CategorySelectorFormItem from "../category/CategorySelectorFormItem";
@@ -10,34 +10,41 @@ export type TodoFormPayload = {
 }
 
 type Props = {
-    formPayload: TodoFormPayload
     onFinish: (values: any) => void
     onCategorySelectChange?: (values: any) => void
+    form: FormInstance
 }
 
-const TodoForm = ({formPayload, onFinish, onCategorySelectChange}: Props): JSX.Element => {
+const TodoForm = ({onFinish, onCategorySelectChange, form}: Props): JSX.Element => {
     return (
         <>
-            <Form onFinish={onFinish} layout="vertical">
+            <Form
+                onFinish={onFinish}
+                layout="vertical"
+                form={form}
+                autoComplete={'off'}
+            >
+                <Form.Item
+                    name="id"
+                    hidden={true}
+                >
+                    <Input/>
+                </Form.Item>
                 <Form.Item
                     label={"Description"}
                     name={"description"}
                     rules={[{required: true, message: 'Please provide description'}]}
-                    initialValue={formPayload.description}
                 >
                     <Input />
                 </Form.Item>
                 <Form.Item
                     label={"Deadline"}
                     name={"deadline"}
-                    initialValue={formPayload.deadline === undefined ? undefined :
-                        moment(`${formPayload.deadline}`, 'YYYY-MM-DD')}
                 >
                     <DatePicker />
                 </Form.Item>
 
                 <CategorySelectorFormItem
-                    defaultValue={formPayload.categoryId === undefined ? 0 : formPayload.categoryId}
                     onChange={onCategorySelectChange}
                     label={'Category'}
                 />

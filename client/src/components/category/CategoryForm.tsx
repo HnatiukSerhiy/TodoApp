@@ -1,21 +1,27 @@
-import {Button, Col, Form, Input, Row} from "antd";
-
-export type CategoryFormPayload = {
-    name?: string
-}
+import {Button, Col, Form, FormInstance, Input, Row} from "antd";
 
 type Props = {
-    formPayload: CategoryFormPayload
     onFinish: (values: any) => void
+    form: FormInstance
 }
 
-export const CategoryForm = ({formPayload, onFinish}: Props): JSX.Element => {
+const CategoryForm = ({onFinish, form}: Props): JSX.Element => {
     return (
-        <Form onFinish={onFinish} layout={'vertical'}>
+        <Form
+            onFinish={onFinish}
+            layout={'vertical'}
+            form={form}
+            autoComplete='off'
+        >
+            <Form.Item
+                name="id"
+                hidden={true}
+            >
+                <Input/>
+            </Form.Item>
             <Form.Item
                 label={'Name'}
                 name={'name'}
-                initialValue={formPayload.name}
                 rules={[{required: true, message: 'Please, provide name'}]}
             >
                 <Input />

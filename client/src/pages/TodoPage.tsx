@@ -13,21 +13,27 @@ import {selectDataProvider} from "../store/selectors/dataProviderSelectors";
 const TodoPage = (): JSX.Element => {
     const [isModalVisible, setModalVisible] = useState<boolean>(false);
     const [categoryFilterValue, setCategoryFilterValue] = useState<string | undefined>(undefined);
+    const [form] = Form.useForm();
 
     const { getCompletedTodosApiAction, getUnCompletedTodosApiAction, addTodoApiAction } = useActions();
 
-    const onCancelModal = () => setModalVisible(false);
-    const onFilterChange = (value: any) => setCategoryFilterValue(value);
+    const onFilterChange = (value: string) => setCategoryFilterValue(value);
 
     const onAddTodoFinish = (todo: AddTodoFormType) => {
         addTodoApiAction(getAddTodoPayloadFromFormInput(todo));
         setModalVisible(false);
+        form.resetFields();
+    }
+
+    const onCancelModal = () => {
+        setModalVisible(false);
+        form.resetFields();
     }
 
     const dataProvider = useAppSelector(selectDataProvider);
 
     useEffect(() => {
-        /*const categoryId = categoryFilterValue !== DefaultSelectorEnum.defaultCategorySelectorValue ?
+        /*const categoryId = categoryFilterValue !== 0 ?
             Number(categoryFilterValue) : undefined;
 
         getCompletedTodosApiAction(categoryId);
@@ -75,7 +81,7 @@ const TodoPage = (): JSX.Element => {
                 visible={isModalVisible}
                 onCancelModal={onCancelModal}
                 onFormFinish={onAddTodoFinish}
-                formPayload={{}}
+                form={form}
             />
         </>
     )

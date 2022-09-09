@@ -14,6 +14,17 @@ const initialState: InitialStateType = [
             name: "Home"
         },
         isCompleted: false
+    },
+    {
+        id: 2,
+        description: "second demo",
+        deadline: "2022-09-07",
+        doneTime: undefined,
+        category: {
+            id: 2,
+            name: "Education"
+        },
+        isCompleted: false
     }
 ];
 

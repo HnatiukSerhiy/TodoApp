@@ -1,4 +1,4 @@
-import {Modal} from "antd";
+import {FormInstance, Modal} from "antd";
 import TodoForm, {TodoFormPayload} from "./TodoForm";
 
 type Props = {
@@ -6,10 +6,10 @@ type Props = {
     title: string
     onCancelModal: () => void
     onFormFinish: (values: any) => void
-    formPayload: TodoFormPayload
+    form: FormInstance
 }
 
-const TodoModal = ({visible, onCancelModal, title, onFormFinish, formPayload}: Props): JSX.Element => {
+const TodoModal = ({visible, onCancelModal, title, onFormFinish, form}: Props): JSX.Element => {
 
     return (
         <Modal
@@ -17,10 +17,12 @@ const TodoModal = ({visible, onCancelModal, title, onFormFinish, formPayload}: P
             visible={visible}
             onCancel={onCancelModal}
             footer={null}
+            destroyOnClose={true}
+            forceRender={true}
         >
             <TodoForm
                 onFinish={onFormFinish}
-                formPayload={formPayload}
+                form={form}
             />
         </Modal>
     )
