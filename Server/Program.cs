@@ -8,6 +8,17 @@ using Server.XmlStorage.DataProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
+const string corsSpecificOrigins = "CorsSpecificOrigins";
+
+builder.Services.AddCors(options =>
+    options.AddPolicy(corsSpecificOrigins,
+        policy => policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+    )
+);
+
 builder.Services.AddAutoMapper(typeof(TodoProfile), typeof(CategoryProfile));
 
 builder.Services.AddSingleton<TodoSqlDataProvider>();
@@ -32,6 +43,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseCors(corsSpecificOrigins);
 
 app.UseEndpoints(endpoints =>
 {

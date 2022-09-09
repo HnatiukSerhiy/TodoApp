@@ -1,9 +1,10 @@
 import {Button, Modal, Table} from "antd";
 import { Typography } from 'antd';
 import {ColumnsType} from "antd/es/table";
-import {useActions} from "../../hooks";
+import {useActions, useAppSelector} from "../../hooks";
 import {TodoType} from "../../types/todoTypes";
 import {CompletedTodosDisplayData, getCompletedTodosDisplayData} from "../../utils/getDisplayData";
+import {selectLoading} from "../../store/selectors/loadingSelectors";
 
 type Props = {
     data: TodoType[]
@@ -59,12 +60,18 @@ const CompletedTodos = ({data}: Props): JSX.Element => {
         },
     ]
 
+    const isLoading = useAppSelector(selectLoading).isCompletedTodosLoading;
     const displayData = getCompletedTodosDisplayData(data)
 
     return (
         <>
-            <Typography.Title level={4}>UnCompleted Todos</Typography.Title>
-            <Table columns={columns} dataSource={displayData} pagination={false} />
+            <Typography.Title level={4}>Completed Todos</Typography.Title>
+            <Table
+                loading={isLoading}
+                columns={columns}
+                dataSource={displayData}
+                pagination={false}
+            />
         </>
     )
 }

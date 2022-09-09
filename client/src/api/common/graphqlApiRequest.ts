@@ -7,6 +7,9 @@ type ApiRequestParams = {
 export const graphQLApiRequest = async ({url, body}: ApiRequestParams): Promise<any> => {
     const response = await fetch(url, {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: body
     });
 

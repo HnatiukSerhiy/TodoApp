@@ -1,4 +1,4 @@
-import {filter, mergeMap, of} from "rxjs";
+import {concat, filter, mergeMap, of} from "rxjs";
 import {
     addTodoApiAction, deleteTodoApiAction,
     getCompletedTodosApiAction,
@@ -16,6 +16,7 @@ import {
     updateTodoMutation
 } from "../../../api/mutations/todoMutations";
 import {combineEpics} from "redux-observable";
+import {setLoading} from "../../slices/loadingSlice";
 
 const getCompletedTodosEpic = (action$: any) => {
     return action$.pipe(
@@ -25,7 +26,11 @@ const getCompletedTodosEpic = (action$: any) => {
                 ...getCompletedTodosQuery(action.payload, TodoActionEnum.getCompleted)
             }
 
-            return of(ApiRequestAction(apiRequestParams as ApiRequestParamsType))
+            return concat(
+                of(ApiRequestAction(apiRequestParams as ApiRequestParamsType)),
+                of(setLoading({isCompletedTodosLoading: true}))
+            )
+
         })
     )
 }
@@ -38,7 +43,10 @@ const getUnCompletedTodosEpic = (action$: any) => {
                 ...getUnCompletedTodosQuery(action.payload, TodoActionEnum.getUnCompleted)
             }
 
-            return of(ApiRequestAction(apiRequestParams as ApiRequestParamsType))
+            return concat(
+                of(ApiRequestAction(apiRequestParams as ApiRequestParamsType)),
+                of(setLoading({isUnCompletedTodosLoading: true}))
+            )
         })
     )
 }

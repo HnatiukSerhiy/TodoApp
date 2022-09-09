@@ -1,4 +1,4 @@
-import {filter, mergeMap, of} from "rxjs";
+import {concat, filter, mergeMap, of} from "rxjs";
 import {
     addCategoryApiAction,
     deleteCategoryApiAction,
@@ -15,6 +15,7 @@ import {
     updateCategoryMutation
 } from "../../../api/mutations/categoryMutations";
 import {combineEpics} from "redux-observable";
+import {setLoading} from "../../slices/loadingSlice";
 
 const getCategoriesEpic = (action$: any) => {
     return action$.pipe(
@@ -24,7 +25,10 @@ const getCategoriesEpic = (action$: any) => {
                 ...getCategoriesQuery(CategoryActionEnum.get)
             }
 
-            return of(ApiRequestAction(apiRequestParams as ApiRequestParamsType))
+            return concat(
+                of(ApiRequestAction(apiRequestParams as ApiRequestParamsType)),
+                of(setLoading({isCategoriesLoading: true}))
+            )
         })
     )
 }

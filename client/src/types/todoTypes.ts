@@ -12,7 +12,7 @@ export type TodoType = {
 
 export type AddTodoType = {
     description: string
-    deadline?: string
+    deadline?:  string
     categoryId?: number
 }
 

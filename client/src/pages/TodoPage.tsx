@@ -12,13 +12,13 @@ import {selectDataProvider} from "../store/selectors/dataProviderSelectors";
 
 const TodoPage = (): JSX.Element => {
     const [isModalVisible, setModalVisible] = useState<boolean>(false);
-    const [categoryFilterValue, setCategoryFilterValue] = useState<string | undefined>(undefined);
+    const [categoryFilterValue, setCategoryFilterValue] = useState<number | undefined>(undefined);
     const [form] = Form.useForm();
 
     const { getCompletedTodosApiAction, getUnCompletedTodosApiAction,
         addTodoApiAction, getCategoriesApiAction } = useActions();
 
-    const onFilterChange = (value: string) => setCategoryFilterValue(value);
+    const onFilterChange = (value: number) => setCategoryFilterValue(value);
 
     const onAddTodoFinish = (todo: AddTodoFormType) => {
         addTodoApiAction(getAddTodoPayloadFromFormInput(todo));
@@ -33,17 +33,17 @@ const TodoPage = (): JSX.Element => {
 
     const dataProvider = useAppSelector(selectDataProvider);
 
+    const completedTodos = useAppSelector(selectCompletedTodos);
+    const unCompletedTodos = useAppSelector(selectUnCompletedTodos);
+
     useEffect(() => {
-        /*const categoryId = categoryFilterValue !== 0 ?
+        const categoryId = categoryFilterValue !== 0 ?
             Number(categoryFilterValue) : undefined;
 
         getCompletedTodosApiAction(categoryId);
         getUnCompletedTodosApiAction(categoryId);
-        getCategoriesApiAction*/
+        getCategoriesApiAction();
     }, [categoryFilterValue, dataProvider]);
-
-    const completedTodos = useAppSelector(selectCompletedTodos);
-    const unCompletedTodos = useAppSelector(selectUnCompletedTodos);
 
     return (
         <>

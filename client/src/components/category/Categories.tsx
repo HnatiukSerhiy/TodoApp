@@ -2,9 +2,10 @@ import {Button, Form, FormInstance, Modal, Table} from "antd";
 import {ColumnsType} from "antd/es/table";
 import {CategoriesDisplayData, getCategoriesDisplayData} from "../../utils/getDisplayData";
 import {CategoryType, UpdateCategoryType} from "../../types/categoryTypes";
-import {useActions} from "../../hooks";
+import {useActions, useAppSelector} from "../../hooks";
 import CategoryModal from "./CategoryModal";
 import {useState} from "react";
+import {selectLoading} from "../../store/selectors/loadingSelectors";
 
 type Props = {
     data: CategoryType[]
@@ -72,11 +73,13 @@ export const Categories = ({data}: Props): JSX.Element => {
         },
     ]
 
+    const isLoading = useAppSelector(selectLoading).isCategoriesLoading;
     const displayData = getCategoriesDisplayData(data);
 
     return (
         <>
             <Table
+                loading={isLoading}
                 columns={columns}
                 dataSource={displayData}
                 pagination={false}

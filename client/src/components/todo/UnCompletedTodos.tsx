@@ -9,6 +9,7 @@ import TodoModal from "./TodoModal";
 import {selectCategories} from "../../store/selectors/categorySelectors";
 import {getAddTodoPayloadFromFormInput, getUpdateTodoPayloadFromFormInput} from "../../utils/converters";
 import moment from "moment";
+import {selectLoading} from "../../store/selectors/loadingSelectors";
 
 type Props = {
     data: TodoType[]
@@ -45,12 +46,12 @@ const UnCompletedTodos = ({data}: Props): JSX.Element => {
 
     const onUpdateClick = (record: UnCompletedTodosDisplayData) => {
         const categoriesWithSameName = categories.filter(category => category.name === record.category);
-
+        console.log(categoriesWithSameName);
         form.setFieldsValue({
             id: record.key,
             description: record.description,
-            deadline: moment(`${record.deadline}`, 'YYYY-MM-DD'),
-            categoryId: categoriesWithSameName[0].id
+            deadline: record.deadline ? moment(`${record.deadline}`, 'YYYY-MM-DD') : undefined,
+            categoryId: categoriesWithSameName.length !== 0 ? categoriesWithSameName[0].id : 0
         })
 
         moment(`${record.deadline}`, 'YYYY-MM-DD')
@@ -58,7 +59,10 @@ const UnCompletedTodos = ({data}: Props): JSX.Element => {
         setEditModalVisible(true);
     }
 
-    const onSolveClick = (id: number) => solveTodoApiAction(id);
+    const onSolveClick = (id: number) => {
+        solveTodoApiAction(id);
+    }
+
     const onDeleteClick = (id: number) => openConfirmModal(id);
 
     const onCancelEditModal = () => setEditModalVisible(false);
@@ -106,13 +110,19 @@ const UnCompletedTodos = ({data}: Props): JSX.Element => {
         },
     ]
 
+    const isLoading = useAppSelector(selectLoading).isUnCompletedTodosLoading;
     const displayData = getUnCompletedTodosDisplayData(data);
 
     return (
         <>
-            <Typography.Title level={4}>Completed Todos</Typography.Title>
-            <Table columns={columns}  dataSource={displayData} pagination={false} />
-            <TodoModal 
+            <Typography.Title level={4}>UnCompleted Todos</Typography.Title>
+            <Table
+                columns={columns}
+                dataSource={displayData}
+                pagination={false}
+                loading={isLoading}
+            />
+            <TodoModal
                 visible={isEditModalVisible} 
                 title={'Update todo'}
                 onCancelModal={onCancelEditModal}

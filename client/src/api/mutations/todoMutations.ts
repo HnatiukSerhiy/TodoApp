@@ -53,7 +53,10 @@ export const solveTodoMutation = (payload: number, feature: string) => {
     const query: string = `
         mutation solveTodo ($id: Int!) {
             todo {
-                solve(id: $id)
+                solve(id: $id) {
+                    id
+                    doneTime
+                }
             }
         }`;
 

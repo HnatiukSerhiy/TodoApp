@@ -1,14 +1,26 @@
 import {combineEpics, ofType} from "redux-observable";
 import {ApiActionEnum, TodoActionEnum} from "../../../enums/actionEnums";
-import {mergeMap, of} from "rxjs";
-import {addTodo, deleteTodo, pushTodos, solveTodo, updateTodo} from "../../slices/todoSlice";
+import {concat, mergeMap, of} from "rxjs";
+import {
+    addTodo,
+    deleteTodo,
+    pushCompletedTodos,
+    pushUnCompletedTodos,
+    solveTodo,
+    updateTodo
+} from "../../slices/todoSlice";
 import {SolveTodoType, TodoType} from "../../../types/todoTypes";
+import {setLoading} from "../../slices/loadingSlice";
 
 const getCompletedTodosSuccessEpic = (action$: any) => {
     return action$.pipe(
         ofType(`${TodoActionEnum.getCompleted}${ApiActionEnum.apiSuccess}`),
         mergeMap((action: any) => {
-            return of(pushTodos(action.payload.data.todo.getCompleted as TodoType[]))
+
+            return concat(
+                of(pushCompletedTodos(action.payload.data.todo.getCompleted as TodoType[])),
+                of(setLoading({isCompletedTodosLoading: false}))
+            )
         })
     )
 }
@@ -17,7 +29,11 @@ const getUnCompletedTodosSuccessEpic = (action$: any) => {
     return action$.pipe(
         ofType(`${TodoActionEnum.getUnCompleted}${ApiActionEnum.apiSuccess}`),
         mergeMap((action: any) => {
-            return of(pushTodos(action.payload.data.todo.getUnCompleted as TodoType[]))
+
+            return concat(
+                of(pushUnCompletedTodos(action.payload.data.todo.getUnCompleted as TodoType[])),
+                of(setLoading({isUnCompletedTodosLoading: false}))
+            )
         })
     )
 }

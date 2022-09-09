@@ -35,10 +35,17 @@ public class TodoMutations
         return todoDataProvider.GetById(id);
     }
 
-    public static int Solve([FromServices] IDataProviderResolver dataProviderResolver, int id)
+    public static SolveTodoResponseModel Solve([FromServices] IDataProviderResolver dataProviderResolver, int id)
     {
         var todoDataProvider = dataProviderResolver.GetTodoDataProvider();
-        return todoDataProvider.Solve(id);
+        var solvedTodoId = todoDataProvider.Solve(id);
+        var todo = todoDataProvider.GetById(solvedTodoId);
+
+        return new SolveTodoResponseModel()
+        {
+            Id = todo.Id,
+            DoneTime = (DateTime) todo.DoneTime!
+        };
     }
 
     public static int Delete([FromServices] IDataProviderResolver dataProviderResolver, int id)

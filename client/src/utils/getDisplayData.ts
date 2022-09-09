@@ -1,5 +1,4 @@
 import {TodoType} from "../types/todoTypes";
-import {DefaultSelectorEnum} from "../enums/utilsEnum";
 import {CategoryType} from "../types/categoryTypes";
 
 export type UnCompletedTodosDisplayData = {
@@ -28,10 +27,8 @@ export const getUnCompletedTodosDisplayData = (todos: TodoType[]): UnCompletedTo
         displayData.push({
             key: todo.id,
             description: todo.description,
-            deadline: todo.deadline,
-            category: todo.category === undefined ?
-                'None' :
-                todo.category.name
+            deadline: todo.deadline?.substring(0, 10),
+            category: todo.category?.name
         } as UnCompletedTodosDisplayData)
     }
 
@@ -45,10 +42,8 @@ export const getCompletedTodosDisplayData = (todos: TodoType[]): CompletedTodosD
         displayData.push({
             key: todo.id,
             description: todo.description,
-            doneTime: todo.doneTime,
-            category: todo.category === undefined ?
-                'None' :
-                todo.category.name
+            doneTime: todo.doneTime?.substring(0, 10),
+            category: todo.category?.name
         } as CompletedTodosDisplayData)
     }
 

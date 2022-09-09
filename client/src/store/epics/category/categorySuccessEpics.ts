@@ -1,14 +1,18 @@
 import {combineEpics, ofType} from "redux-observable";
 import {ApiActionEnum, CategoryActionEnum} from "../../../enums/actionEnums";
-import {mergeMap, of} from "rxjs";
+import {concat, mergeMap, of} from "rxjs";
 import {CategoryType} from "../../../types/categoryTypes";
 import {addCategory, deleteCategory, pushCategories, updateCategory} from "../../slices/categorySlice";
+import {setLoading} from "../../slices/loadingSlice";
 
 const getCategoriesSuccessEpics = (action$: any) => {
     return action$.pipe(
         ofType(`${CategoryActionEnum.get}${ApiActionEnum.apiSuccess}`),
         mergeMap((action: any) => {
-            return of(pushCategories(action.payload.data.category.getCategories as CategoryType[]))
+            return concat(
+                of(pushCategories(action.payload.data.category.getCategories as CategoryType[])),
+                of(setLoading({isCategoriesLoading: false}))
+            )
         })
     )
 }

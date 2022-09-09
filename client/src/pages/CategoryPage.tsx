@@ -5,15 +5,18 @@ import CategoryModal from "../components/category/CategoryModal";
 import {useActions, useAppSelector} from "../hooks";
 import {AddCategoryType} from "../types/categoryTypes";
 import {selectCategories} from "../store/selectors/categorySelectors";
+import {selectDataProvider} from "../store/selectors/dataProviderSelectors";
 
 const CategoryPage = (): JSX.Element => {
     const [isModalVisible, setModalVisible] = useState<boolean>(false);
     const { addCategoryApiAction, getCategoriesApiAction } = useActions();
     const [form] = Form.useForm();
 
+    const dataProvider = useAppSelector(selectDataProvider);
+
     useEffect(() => {
-        // getCategoriesApiAction();
-    }, []);
+        getCategoriesApiAction();
+    }, [dataProvider]);
 
     const onAddButtonClick = () => setModalVisible(true);
 
