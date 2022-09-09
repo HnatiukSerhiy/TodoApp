@@ -36,7 +36,7 @@ public class TodoSqlDataProvider : ITodoDataProvider
 
         public int Delete(int id)
         {
-            const string query = "DELETE FROM Todos WHERE Id=@Id OUTPUT DELETED.Id";
+            const string query = "DELETE FROM Todos OUTPUT DELETED.Id WHERE Id=@Id";
 
             var connection = new SqlConnection(connectionString);
             return connection.ExecuteScalar<int>(query, new { Id = id });
@@ -121,13 +121,13 @@ public class TodoSqlDataProvider : ITodoDataProvider
         public int Update(TodoModel todoModel)
         {
             string query = @"
-                    UPDATE Todos 
+                    UPDATE Todos
                     SET 
                         Description=@Description, 
                         Deadline=@Deadline,
-                        CategoryId=@categoryId 
-                    WHERE Todos.Id = @Id
-                    OUTPUT INSERTED.Id";
+                        CategoryId=@categoryId
+                    OUTPUT INSERTED.Id
+                    WHERE Todos.Id = @Id";
 
             var todoDbModel = mapper.Map<TodoDbModel>(todoModel);
             

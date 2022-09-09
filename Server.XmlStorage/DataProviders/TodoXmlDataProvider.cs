@@ -11,12 +11,14 @@ public class TodoXmlDataProvider : ITodoDataProvider
         private readonly string todosXmlPath;
         private readonly TodoBuilder todoBuilder;
         private readonly XmlDocument xmlDocument;
+        private readonly CategoryXmlDataProvider categoryXmlDataProvider;
 
         public TodoXmlDataProvider(IConfiguration configuration)
         {
             todosXmlPath = configuration["XmlPath:Todos"];
             todoBuilder = new TodoBuilder();
             xmlDocument = new XmlDocument();
+            categoryXmlDataProvider = new CategoryXmlDataProvider(configuration);
         }
 
         public int Add(TodoModel todoModel)
@@ -35,7 +37,8 @@ public class TodoXmlDataProvider : ITodoDataProvider
             if (todoModel.Category?.Id != null)
             {
                 var categoryNameNode = xmlDocument.CreateElement("Name");
-                parentCategoryNode.SetAttributeNode("Id", todoModel.Category.Id.ToString());
+                parentCategoryNode.SetAttribute("Id", todoModel.Category.Id.ToString());
+                categoryNameNode.InnerText = categoryXmlDataProvider.GetById((int) todoModel.Category.Id).Name;
                 parentCategoryNode.AppendChild(categoryNameNode);
             }
 
@@ -47,7 +50,7 @@ public class TodoXmlDataProvider : ITodoDataProvider
             todoNode.SetAttribute("Id", id.ToString());
 
             descriptionNode.InnerText = todoModel.Description;
-            isCompletedNode.InnerText = todoModel.IsCompleted.ToString()!;
+            isCompletedNode.InnerText = false.ToString();
             deadlineNode.InnerText = deadlineDate != null ? deadlineDate : String.Empty;
 
             todoNode.AppendChild(descriptionNode);
@@ -128,7 +131,7 @@ public class TodoXmlDataProvider : ITodoDataProvider
         {
             xmlDocument.Load(todosXmlPath);
             
-            var todoNode = xmlDocument.SelectSingleNode($"//Todos/Todo[@Id='{id}']");
+            var todoNode = xmlDocument.SelectSingleNode($"Todos/Todo[//@Id='{id}']");
 
             todoNode!["IsCompleted"]!.InnerText = "True";
             todoNode["DoneTime"]!.InnerText = $"{DateTime.Now.Year}-{DateTime.Now.Month}-{DateTime.Now.Day}";
@@ -142,7 +145,7 @@ public class TodoXmlDataProvider : ITodoDataProvider
         {
             xmlDocument.Load(todosXmlPath);
 
-            var todoNode = xmlDocument.SelectSingleNode($"//TodoList/Todo[@Id='{todoModel.Id}']");
+            var todoNode = xmlDocument.SelectSingleNode($"TodoList/Todo[//@Id='{todoModel.Id}']");
 
             todoNode!["Description"]!.InnerText = todoModel.Description;
             todoNode["Deadline"]!.InnerText = todoModel.Deadline.ToString()!;
@@ -154,7 +157,7 @@ public class TodoXmlDataProvider : ITodoDataProvider
             {
                 todoNode["Category"]!.Attributes.RemoveNamedItem("Id");
                 todoNode["Category"]!.SetAttribute("Id", todoModel.Category.Id.ToString());
-                todoNode["Category/Name"]!.InnerText = todoModel.Category.Name;
+                todoNode["Category/Name"]!.InnerText = categoryXmlDataProvider.GetById((int) todoModel.Category.Id).Name;
             }
 
             xmlDocument.Save(todosXmlPath);
@@ -166,20 +169,19 @@ public class TodoXmlDataProvider : ITodoDataProvider
         {
             int maxId = 0;
 
-            var xmlTodoList = xmlDocument.SelectNodes("TodoList/Todo");
+            var xmlTodos = xmlDocument.SelectNodes("Todos/Todo");
 
-            if (xmlTodoList != null)
+            if (xmlTodos is null) return ++maxId;
+            
+            foreach (XmlNode todo in xmlTodos)
             {
-                foreach (XmlNode todo in xmlTodoList)
+                int id = int.Parse(todo.Attributes!["Id"]!.Value);
+
+                if (id > maxId)
                 {
-                    int id = todo["Id"] != null ? int.Parse(todo["Id"]?.InnerText!) : 0;
-
-                    if (id > maxId)
-                    {
-                        maxId = id;
-                    }
-
+                    maxId = id;
                 }
+
             }
 
             return ++maxId;

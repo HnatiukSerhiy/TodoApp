@@ -7,6 +7,7 @@ public class CategoryBuilder
 {
     public CategoryModel BuildCategoryFromXmlNode(XmlNode node)
     {
+        
         int id = int.Parse(node.Attributes!["Id"]!.Value);
         string name = node["Name"]!.InnerText;
 

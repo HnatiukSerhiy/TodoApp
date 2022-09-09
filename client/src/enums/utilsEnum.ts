@@ -3,6 +3,6 @@ export const enum DefaultSelectorEnum {
 }
 
 export const enum DataProviderEnum {
-    SQLServer = 'SQL',
-    XMLStorage = 'XML'
+    SQLServer = 'SQLServer',
+    XMLStorage = 'XMLStorage'
 }

@@ -6,5 +6,5 @@ public class AddTodoInputModel
 {
     public string Description { get; set; } = string.Empty;
     public DateTime? Deadline { get; set; }
-    public int CategoryId { set; get; }
+    public int? CategoryId { set; get; }
 }

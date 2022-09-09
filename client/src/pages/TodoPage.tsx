@@ -15,7 +15,8 @@ const TodoPage = (): JSX.Element => {
     const [categoryFilterValue, setCategoryFilterValue] = useState<string | undefined>(undefined);
     const [form] = Form.useForm();
 
-    const { getCompletedTodosApiAction, getUnCompletedTodosApiAction, addTodoApiAction } = useActions();
+    const { getCompletedTodosApiAction, getUnCompletedTodosApiAction,
+        addTodoApiAction, getCategoriesApiAction } = useActions();
 
     const onFilterChange = (value: string) => setCategoryFilterValue(value);
 
@@ -37,7 +38,8 @@ const TodoPage = (): JSX.Element => {
             Number(categoryFilterValue) : undefined;
 
         getCompletedTodosApiAction(categoryId);
-        getUnCompletedTodosApiAction(categoryId);*/
+        getUnCompletedTodosApiAction(categoryId);
+        getCategoriesApiAction*/
     }, [categoryFilterValue, dataProvider]);
 
     const completedTodos = useAppSelector(selectCompletedTodos);

@@ -43,7 +43,7 @@ public class CategoryXmlDataProvider : ICategoryDataProvider
         public int Delete(int id)
         {
             xmlDocument.Load(categoriesXmlPath);
-            var categoryNode = xmlDocument.SelectSingleNode($"//Categories/Category[@Id={id}]");
+            var categoryNode = xmlDocument.SelectSingleNode($"Categories/Category[//@Id={id}]");
 
             categoryNode!.ParentNode!.RemoveChild(categoryNode);
             xmlDocument.Save(categoriesXmlPath);
@@ -55,7 +55,7 @@ public class CategoryXmlDataProvider : ICategoryDataProvider
         {
             xmlDocument.Load(categoriesXmlPath);
 
-            var categoryXmlNode = xmlDocument.SelectSingleNode($"//Categories/Category[@Id={id}]");
+            var categoryXmlNode = xmlDocument.SelectSingleNode($"Categories/Category[//@Id={id}]");
 
             return categoryBuilder.BuildCategoryFromXmlNode(categoryXmlNode!);
         }
@@ -81,21 +81,25 @@ public class CategoryXmlDataProvider : ICategoryDataProvider
         public int Update(CategoryModel categoryModel)
         {
             xmlDocument.Load(categoriesXmlPath);
-            var categoryNode = xmlDocument.SelectSingleNode($"//Categories/Category[@Id={categoryModel.Id}]");
+            var categoryNode = xmlDocument.SelectSingleNode($"Categories/Category[//@Id={categoryModel.Id}]");
             
             categoryNode!["Name"]!.InnerText = categoryModel.Name;
             xmlDocument.Save(categoriesXmlPath);
 
-            return categoryModel.Id;
+            return (int) categoryModel.Id!;
         }
 
         private int GetNewId()
         {
             int maxId = 0;
 
-            foreach (XmlNode idNode in xmlDocument.SelectNodes("Categories/Category/Id")!)
+            var xmlCategories = xmlDocument.SelectNodes("Categories/Category");
+
+            if (xmlCategories is null) return ++maxId;
+            
+            foreach (XmlNode idNode in xmlCategories)
             {
-                int id = Convert.ToInt32(idNode.InnerText);
+                int id = int.Parse(idNode.Attributes!["Id"]!.Value);
 
                 if (id > maxId)
                 {

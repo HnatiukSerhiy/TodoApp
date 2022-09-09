@@ -13,6 +13,7 @@ public class TodoProfile : Profile
             opt => 
                 opt.MapFrom(source => 
                     source.Category == null ? (int?)null : source.Category.Id)).ReverseMap();
+        
         CreateMap<TodoModel, UpdateTodoInputModel>()
             .ForMember(dest => dest.CategoryId, 
             opt => 
