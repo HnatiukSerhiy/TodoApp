@@ -16,8 +16,7 @@ public class TodoXmlDataProvider : ITodoDataProvider
 
         public TodoXmlDataProvider(IConfiguration configuration)
         {
-            var projectFolder = Directory.GetParent(Directory.GetCurrentDirectory())!.FullName;
-            todosXmlPath = Path.Combine(projectFolder, configuration["XmlPath:Todos"]);
+            todosXmlPath = configuration["XmlPath:Todos"];
             todoBuilder = new TodoBuilder();
             xmlDocument = new XmlDocument();
             categoryXmlDataProvider = new CategoryXmlDataProvider(configuration);
