@@ -54,12 +54,11 @@ const UnCompletedTodos = ({data}: Props): JSX.Element => {
             categoryId: categoriesWithSameName.length !== 0 ? categoriesWithSameName[0].id : 0
         })
 
-        moment(`${record.deadline}`, 'YYYY-MM-DD')
-
         setEditModalVisible(true);
     }
 
     const onSolveClick = (id: number) => {
+        console.log(id);
         solveTodoApiAction(id);
     }
 

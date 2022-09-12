@@ -28,6 +28,9 @@ const todoSlice = createSlice({
             const index = state.unCompletedTodos.findIndex(todo => todo.id === action.payload.id);
             state.unCompletedTodos[index].isCompleted = true;
             state.unCompletedTodos[index].doneTime = action.payload.doneTime;
+
+            state.completedTodos.push(state.unCompletedTodos[index]);
+            state.unCompletedTodos = state.unCompletedTodos.filter(todo => todo.id !== action.payload.id);
         },
         updateTodo: (state, action: PayloadAction<TodoType>) => {
             const index = state.unCompletedTodos.findIndex(todo => todo.id === action.payload.id);

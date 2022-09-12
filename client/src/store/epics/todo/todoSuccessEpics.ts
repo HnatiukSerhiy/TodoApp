@@ -60,6 +60,7 @@ const solveTodoSuccessEpic = (action$: any) => {
     return action$.pipe(
         ofType(`${TodoActionEnum.solveTodo}${ApiActionEnum.apiSuccess}`),
         mergeMap((action: any) => {
+            console.log(action.payload.data.todo.solve);
             return of(solveTodo(action.payload.data.todo.solve as SolveTodoType))
         })
     )
